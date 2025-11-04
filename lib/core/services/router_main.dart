@@ -1,6 +1,9 @@
 part of 'router.dart';
 
+final rootNavigatorKey = GlobalKey<NavigatorState>();
+
 final router = GoRouter(
+  navigatorKey: rootNavigatorKey,
   debugLogDiagnostics: true,
   initialLocation: '/',
   routes: [
@@ -12,7 +15,7 @@ final router = GoRouter(
           ..getUserId();
         if ((Cache.instance.sessionToken == null ||
                 Cache.instance.userId == null) &&
-            cacheHelper.isFirstTime()) {
+            !cacheHelper.isFirstTime()) {
           return LoginScreen.path;
         }
         if (state.extra == 'home') return HomeScreen.path;
@@ -34,8 +37,9 @@ final router = GoRouter(
       builder: (context, state, child) {
         return DashboardScreen(state: state, child: child);
       },
-      routes: const [
-
-    ]),
+      routes: [
+        GoRoute(path: HomeScreen.path, builder: (_, __) => const HomeScreen()),
+      ],
+    ),
   ],
 );
